@@ -1,0 +1,435 @@
+% Compile with: latexmk -pdf synthid_reading_group.tex
+% Alternatively, run pdflatex twice to populate the contents and slide count.
+% Paper: https://www.nature.com/articles/s41586-024-08025-4
+% Skeleton: title page, contents, and one empty frame per section.
+% Suggested speaking time: 45 minutes, excluding questions and discussion.
+
+\documentclass[aspectratio=169,11pt]{beamer}
+
+% --------------------
+% Theme (plain/minimal)
+% --------------------
+\usetheme{Boadilla}
+\usecolortheme{seahorse}
+\setbeamertemplate{blocks}[rounded][shadow=false]
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+
+\AtBeginSection[]
+{
+    \begin{frame}
+        \centering
+        \vfill
+        {\usebeamerfont{title}\usebeamercolor[fg]{title}\insertsectionhead\par}
+        \vfill
+    \end{frame}
+}
+
+% --------------------
+% Packages
+% --------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{caption}
+
+\hypersetup{
+  colorlinks=true,
+  urlcolor=blue,      % \url and \href external links
+  linkcolor=blue,     % internal links (refs, TOC)
+  citecolor=blue      % \cite links
+}
+
+\newcommand{\xl}[1]{\textcolor{brown}{[XL: #1]}}
+\newcommand{\key}[1]{\textbf{#1}}
+\newcommand{\focus}[1]{\textcolor{orange!80!black}{#1}}
+\renewcommand{\footnoterule}{}
+\newcommand{\sourcenote}[1]{%
+  \begingroup
+  \renewcommand{\thefootnote}{}%
+  \footnotetext{\tiny{#1}}%
+  \endgroup
+}
+
+% Letters: bold symbols
+\def\bA{\mathbf{A}}
+\def\bB{\mathbf{B}}
+\def\bC{\mathbf{C}}
+\def\bD{\mathbf{D}}
+\def\bE{\mathbf{E}}
+\def\bF{\mathbf{F}}
+\def\bG{\mathbf{G}}
+\def\bH{\mathbf{H}}
+\def\bI{\mathbf{I}}
+\def\bJ{\mathbf{J}}
+\def\bK{\mathbf{K}}
+\def\bL{\mathbf{L}}
+\def\bM{\mathbf{M}}
+\def\bN{\mathbf{N}}
+\def\bO{\mathbf{O}}
+\def\bP{\mathbf{P}}
+\def\bQ{\mathbf{Q}}
+\def\bR{\mathbf{R}}
+\def\bS{\mathbf{S}}
+\def\bT{\mathbf{T}}
+\def\bU{\mathbf{U}}
+\def\bV{\mathbf{V}}
+\def\bW{\mathbf{W}}
+\def\bX{\mathbf{X}}
+\def\bY{\mathbf{Y}}
+\def\bZ{\mathbf{Z}}
+
+\def\ba{\mathbf{a}}
+\def\bb{\mathbf{b}}
+\def\bc{\mathbf{c}}
+\def\bd{\mathbf{d}}
+\def\be{\mathbf{e}}
+\def\bff{\mathbf{f}}
+\def\bg{\mathbf{g}}
+\def\bh{\mathbf{h}}
+\def\bi{\mathbf{i}}
+\def\bj{\mathbf{j}}
+\def\bk{\mathbf{k}}
+\def\bl{\mathbf{l}}
+\def\bm{\mathbf{m}}
+\def\bn{\mathbf{n}}
+\def\bo{\mathbf{o}}
+\def\bp{\mathbf{p}}
+\def\bq{\mathbf{q}}
+\def\br{\mathbf{r}}
+\def\bs{\mathbf{s}}
+\def\bt{\mathbf{t}}
+\def\bu{\mathbf{u}}
+\def\bv{\mathbf{v}}
+\def\bw{\mathbf{w}}
+\def\bx{\mathbf{x}}
+\def\by{\mathbf{y}}
+\def\bz{\mathbf{z}}
+
+\def\bmu{\boldsymbol{\mu}}
+\def\bbeta{\boldsymbol{\beta}}
+\def\btheta{\boldsymbol{\theta}}
+\def\bepsilon{\boldsymbol{\epsilon}}
+
+\def\balph{\mathbf{\alpha}}
+\def\bnu{\mathbf{\nu}}
+\def\bbeta{\mathbf{\beta}}
+\def\bxi{\mathbf{\xi}}
+\def\bXi{\mathbf{\Xi}}
+\def\bgam{\mathbf{\gamma}}
+\def\bGam{\mathbf{\Gamma}}
+\def\bdel{\mathbf{\delta}}
+\def\bDel{\mathbf{\Delta}}
+\def\bpi{\mathbf{\pi}}
+\def\bPi{\mathbf{\Pi}}
+\def\beps{\mathbf{\epsilon}}
+\def\bveps{\mathbf{\varepsilon}}
+\def\brho{\mathbf{\rho}}
+\def\bvrho{\mathbf{\varrho}}
+\def\bzeta{\boldsymbok{\zeta}}
+\def\bsig{\mathbf{\sigma}}
+\def\bSig{\mathbf{\Sigma}}
+\def\bseta{\mathbf{\eta}}
+\def\btau{\mathbf{tau}}
+\def\btheta{\mathbf{\theta}}
+\def\bvtheta{\mathbf{\vartheta}}
+\def\bTheta{\mathbf{\Theta}}
+\def\bupsilon{\mathbf{\upsilon}}
+\def\bUpsilon{\mathbf{\Upsilon}}
+\def\bphi{\mathbf{\phi}}
+\def\bvphi{\mathbf{\varphi}}
+\def\bPhi{\mathbf{\Phi}}
+\def\bkappa{\mathbf{\kappa}}
+\def\bchi{\mathbf{\chi}}
+\def\blambda{\mathbf{\lambda}}
+\def\bLambda{\mathbf{\Lambda}}
+\def\bpsi{\mathbf{\psi}}
+\def\bPsi{\mathbf{\Psi}}
+\def\bmu{\mathbf{\mu}}
+\def\bomega{\mathbf{\omega}}
+\def\bOmega{\mathbf{\Omega}}
+\def\bepsilon{\mathbf{\epsilon}}
+\def\bdelta{\mathbf{\delta}}
+
+\def\bzero{\mathbf{0}}
+\def\bone{\mathbf{1}}
+
+% Letters: blackboard font
+\def\A{\mathbb{A}}
+\def\B{\mathbb{B}}
+\def\C{\mathbb{C}}
+\def\D{\mathbb{D}}
+\def\E{\mathbb{E}}
+\def\F{\mathbb{F}}
+\def\G{\mathbb{G}}
+\def\H{\mathbb{H}}
+\def\I{\mathbb{I}}
+\def\J{\mathbb{J}}
+\def\K{\mathbb{K}}
+\def\L{\mathbb{L}}
+\def\M{\mathbb{M}}
+\def\N{\mathbb{N}}
+\def\O{\mathbb{O}}
+\def\P{\mathbb{P}}
+\def\Q{\mathbb{Q}}
+\def\R{\mathbb{R}}
+\def\S{\mathbb{S}}
+\def\T{\mathbb{T}}
+\def\U{\mathbb{U}}
+\def\V{\mathbb{V}}
+\def\W{\mathbb{W}}
+\def\X{\mathbb{X}}
+\def\Y{\mathbb{Y}}
+\def\Z{\mathbb{Z}}
+
+\def\a{\mathbb{a}}
+\def\b{\mathbb{b}}
+\def\c{\mathbb{c}}
+\def\d{\mathbb{d}}
+\def\e{\mathbb{e}}
+\def\f{\mathbb{f}}
+\def\g{\mathbb{g}}
+\def\h{\mathbb{h}}
+\def\i{\mathbb{i}}
+\def\j{\mathbb{j}}
+\def\k{\mathbb{k}}
+\def\l{\mathbb{l}}
+\def\m{\mathbb{m}}
+\def\n{\mathbb{n}}
+\def\o{\mathbb{o}}
+\def\p{\mathbb{p}}
+\def\q{\mathbb{q}}
+\def\r{\mathbb{r}}
+\def\s{\mathbb{s}}
+\def\t{\mathbb{t}}
+\def\u{\mathbb{u}}
+\def\v{\mathbb{v}}
+\def\w{\mathbb{w}}
+\def\x{\mathbb{x}}
+\def\y{\mathbb{y}}
+\def\z{\mathbb{z}}
+
+% Letters: caligraphics
+\def\cA{\mathcal{A}}
+\def\cB{\mathcal{B}}
+\def\cC{\mathcal{C}}
+\def\cD{\mathcal{D}}
+\def\cE{\mathcal{E}}
+\def\cF{\mathcal{F}}
+\def\cG{\mathcal{G}}
+\def\cH{\mathcal{H}}
+\def\cI{\mathcal{I}}
+\def\cJ{\mathcal{J}}
+\def\cK{\mathcal{K}}
+\def\cL{\mathcal{L}}
+\def\cM{\mathcal{M}}
+\def\cN{\mathcal{N}}
+\def\cO{\mathcal{O}}
+\def\cP{\mathcal{P}}
+\def\cQ{\mathcal{Q}}
+\def\cR{\mathcal{R}}
+\def\cS{\mathcal{S}}
+\def\cT{\mathcal{T}}
+\def\cU{\mathcal{U}}
+\def\cV{\mathcal{V}}
+\def\cW{\mathcal{W}}
+\def\cX{\mathcal{X}}
+\def\cY{\mathcal{Y}}
+\def\cZ{\mathcal{Z}}
+
+% Moment operators
+\newcommand{\mean}{\mathbb{E}}
+\newcommand{\Var}{\text{\rm Var}}
+\newcommand{\Cov}{\text{\rm Cov}}
+
+% Stochastic convergence and equality
+\newcommand{\darrow}{\xrightarrow{\;\text{\tiny\rm d}\;}}
+\newcommand{\parrow}{\xrightarrow{\;\text{\tiny\rm p}\;}}
+\newcommand{\equdist}{\stackrel{\text{\rm\tiny d}}{=}}
+\newcommand{\equas}{=_{\text{\rm\tiny a.s.}}}
+
+% Curly braces in various sizes
+\newcommand{\braces}[1]{{\lbrace #1 \rbrace}}
+\newcommand{\bigbraces}[1]{{\bigl\lbrace #1 \bigr\rbrace}}
+\newcommand{\Bigbraces}[1]{{\Bigl\lbrace #1 \Bigr\rbrace}}
+\newcommand{\biggbraces}[1]{{\biggl\lbrace #1 \biggr\rbrace}}
+\newcommand{\Biggbraces}[1]{{\Biggl\lbrace #1 \Biggr\rbrace}}
+
+% Drawn iid from...
+\DeclareMathOperator{\simiid}{\sim_{\mbox{\tiny iid}}}
+
+% Various math operators in smaller sizes
+\DeclareMathOperator{\tsum}{{\textstyle\sum}}
+\DeclareMathOperator{\tprod}{{\textstyle \prod}}
+\DeclareMathOperator{\msum}{\medmath\sum}
+\DeclareMathOperator{\mprod}{\medmath\prod}
+\DeclareMathOperator{\mint}{\scaleobj{.8}{\int}}
+\DeclareMathOperator*{\medcup}{\raisebox{-.15em}{$\mathbin{\scalebox{1.5}{\ensuremath{\cup}}}$}}
+\DeclareMathOperator*{\medcap}{\raisebox{-.15em}{$\mathbin{\scalebox{1.5}{\ensuremath{\cap}}}$}}
+
+% argmax, argmin, conditional independence symbol
+\DeclareMathOperator{\argmax}{\text{\rm argmax}}
+\DeclareMathOperator{\argmin}{\text{\rm argmin}}
+\DeclareMathOperator{\condind}{{\perp\!\!\!\perp}}
+
+% Minimal styling. Beamer loads hyperref automatically.
+% \usetheme{default}
+\usefonttheme{professionalfonts}
+\definecolor{navy}{RGB}{31,58,95}
+\setbeamercolor{structure}{fg=navy}
+\setbeamercolor{title}{fg=navy}
+\setbeamercolor{frametitle}{fg=navy}
+\setbeamertemplate{navigation symbols}{}
+% \setbeamertemplate{footline}[frame number]
+\setbeamertemplate{section in toc}[sections numbered]
+
+
+% Edit presenter details and add the scheduled presentation date here.
+\title[Scalable text watermarking]{Scalable watermarking for identifying large language model outputs.}
+\subtitle{Dathathri et al., \textit{Nature} (2024)}
+\author{Xing Liu}
+\institute{QuantCo reading group}
+\date{7 Oct 2026}
+
+\begin{document}
+
+% Front page
+\begin{frame}[plain]
+    \titlepage
+\end{frame}
+
+% Table of contents updates automatically from the sections below.
+\begin{frame}{Contents}
+    \tableofcontents[hideallsubsections]
+\end{frame}
+
+% 1. Motivation -- 4 minutes
+\section{Motivation}
+\begin{frame}[t]{Motivation}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.5\textwidth]{figs/motivation_macron.png}
+        \caption*{\href{https://www.theguardian.com/technology/2026/jul/31/ai-labels-to-be-compulsory-on-authentic-looking-content-under-eu-rules}{Link.} EU AI Act enforcement, starting from 2nd August 2026.}
+    \end{figure}
+\end{frame}
+
+\begin{frame}[t]{Motivation}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.5\textwidth]{figs/motivation_anthropic.png}
+        \caption*{\href{https://www.anthropic.com/news/claude-text-watermark}{Link.} Anthropic adopts text watermarking.}
+    \end{figure}
+\end{frame}
+
+\begin{frame}[t]{Motivation}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.5\textwidth]{figs/motivation_tmlr.png}
+        \caption*{\href{https://medium.com/@TmlrOrg/increasing-emphasis-on-clear-writing-in-acceptance-criteria-bfd75349f5e9}{Link.} TMLR's call for reviewers to emphasise more on clarity of writing.}
+    \end{figure}
+\end{frame}
+
+% 2. Background -- 5 minutes
+\section{Background}
+\begin{frame}[t]{How LLMs Generate Texts}
+    % Autoregressive next-token sampling and entropy.
+    % Intuition behind existing generative watermarking approaches.
+    \begin{itemize}
+        \item Most LLMs generated texts using autoregressive next-token sampling.
+    \end{itemize}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{figs/bg_autoregressive.png}
+    \end{figure}
+    \begin{itemize}
+        \item Example:
+    \end{itemize}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.6\textwidth]{figs/bg_autoreg_example.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}[t]{Existing Approaches for LLM Text Detection}
+    \begin{itemize}
+        \item Retrieval-based detection
+            \begin{itemize}
+                \item Keeping a growing record of all generated texts and checking against it for matches.
+                \item Requires scale and coordination, and raises privacy concerns.
+            \end{itemize}
+        \item Post hoc detection
+            \begin{itemize}
+                \item Using the statistical features of text or training a ML-based classifier.
+                \item Computationally expensive; inconsistent performance (especially out-of-domain).
+            \end{itemize}
+        \item Watermarking
+            \begin{itemize}
+                \item Marking the generated text in some way so that it can subsequently be identified.
+                \item Three approaches:
+                \begin{itemize}
+                    \item During generation. \hspace{50pt} \focus{$\rightarrow$ This paper}.
+                    \item Editing already generated text.
+                    \item Altering LLM training data.
+                \end{itemize}
+                \item Often involves a quality (of generated texts) and effect (of detection) trade-off.
+            \end{itemize}
+    \end{itemize}
+    \xl{use plots?}
+\end{frame}
+
+% mention this? https://www.pangram.com/ 
+
+
+% 3. SynthID-Text mechanism -- 12 minutes
+\section{SynthID-Text}
+\begin{frame}[t]{SynthID-Text mechanism}
+    % Secret key, context hashing, and pseudorandom watermark functions.
+    % Layered tournament sampling.
+    % Walk through a small example based on Figure 2.
+    % Duplicate this frame as needed for the algorithm walkthrough.
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{figs/method_overview.png}
+    \end{figure}
+
+    \sourcenote{Fig.~1, Dathathri et al.}
+\end{frame}
+
+% 4. Guarantees and detection -- 7 minutes
+\section{Guarantees and detection}
+\begin{frame}[t]{Guarantees and detection}
+    % Non-distortion: token, single-sequence, and multiple-sequence levels.
+    % Repeated-context masking and a short proof sketch.
+    % Watermark score, null hypothesis, thresholds, and abstention.
+    % Detection power as a function of text length and entropy.
+\end{frame}
+
+% 5. Computational scalability -- 5 minutes
+\section{Computational scalability}
+\begin{frame}[t]{Computational scalability}
+    % Efficient implementation of tournament sampling.
+    % Speculative sampling: draft model and target model.
+    % Speed versus watermark detectability.
+\end{frame}
+
+% 6. Empirical evidence -- 8 minutes
+\section{Empirical evidence}
+\begin{frame}[t]{Empirical evidence}
+    % Detection results and baseline comparisons: Figure 3.
+    % Text quality, response diversity, and latency.
+    % Gemini live experiment: approximately 20 million responses.
+    % Duplicate this frame as needed to separate the evaluations.
+\end{frame}
+
+% 7. Critical assessment -- 4 minutes
+\section{Critical assessment}
+\begin{frame}[t]{Critical assessment}
+    % Short or low-entropy text, editing, and paraphrasing.
+    % Provider participation and the scope of watermark detection.
+    % Strength of the empirical evidence and main takeaways.
+\end{frame}
+
+\end{document}
