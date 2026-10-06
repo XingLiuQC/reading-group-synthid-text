@@ -29,36 +29,22 @@
 \headcommand {\beamer@framepages {10}{10}}
 \headcommand {\slideentry {3}{0}{2}{11/11}{}{0}}
 \headcommand {\beamer@framepages {11}{11}}
-\headcommand {\beamer@sectionpages {10}{11}}
-\headcommand {\beamer@subsectionpages {10}{11}}
-\headcommand {\sectionentry {4}{Guarantees and detection}{12}{Guarantees and detection}{0}}
-\headcommand {\slideentry {4}{0}{1}{12/12}{}{0}}
+\headcommand {\slideentry {3}{0}{3}{12/12}{}{0}}
 \headcommand {\beamer@framepages {12}{12}}
-\headcommand {\slideentry {4}{0}{2}{13/13}{}{0}}
+\headcommand {\slideentry {3}{0}{4}{13/13}{}{0}}
 \headcommand {\beamer@framepages {13}{13}}
-\headcommand {\beamer@sectionpages {12}{13}}
-\headcommand {\beamer@subsectionpages {12}{13}}
-\headcommand {\sectionentry {5}{Computational scalability}{14}{Computational scalability}{0}}
-\headcommand {\slideentry {5}{0}{1}{14/14}{}{0}}
+\headcommand {\slideentry {3}{0}{5}{14/14}{}{0}}
 \headcommand {\beamer@framepages {14}{14}}
-\headcommand {\slideentry {5}{0}{2}{15/15}{}{0}}
+\headcommand {\slideentry {3}{0}{6}{15/15}{}{0}}
 \headcommand {\beamer@framepages {15}{15}}
-\headcommand {\beamer@sectionpages {14}{15}}
-\headcommand {\beamer@subsectionpages {14}{15}}
-\headcommand {\sectionentry {6}{Empirical evidence}{16}{Empirical evidence}{0}}
-\headcommand {\slideentry {6}{0}{1}{16/16}{}{0}}
+\headcommand {\slideentry {3}{0}{7}{16/16}{}{0}}
 \headcommand {\beamer@framepages {16}{16}}
-\headcommand {\slideentry {6}{0}{2}{17/17}{}{0}}
+\headcommand {\slideentry {3}{0}{8}{17/17}{}{0}}
 \headcommand {\beamer@framepages {17}{17}}
-\headcommand {\beamer@sectionpages {16}{17}}
-\headcommand {\beamer@subsectionpages {16}{17}}
-\headcommand {\sectionentry {7}{Critical assessment}{18}{Critical assessment}{0}}
-\headcommand {\slideentry {7}{0}{1}{18/18}{}{0}}
+\headcommand {\slideentry {3}{0}{9}{18/18}{}{0}}
 \headcommand {\beamer@framepages {18}{18}}
-\headcommand {\slideentry {7}{0}{2}{19/19}{}{0}}
-\headcommand {\beamer@framepages {19}{19}}
-\headcommand {\beamer@partpages {1}{19}}
-\headcommand {\beamer@subsectionpages {18}{19}}
-\headcommand {\beamer@sectionpages {18}{19}}
-\headcommand {\beamer@documentpages {19}}
-\headcommand {\gdef \inserttotalframenumber {19}}
+\headcommand {\beamer@partpages {1}{18}}
+\headcommand {\beamer@subsectionpages {10}{18}}
+\headcommand {\beamer@sectionpages {10}{18}}
+\headcommand {\beamer@documentpages {18}}
+\headcommand {\gdef \inserttotalframenumber {18}}

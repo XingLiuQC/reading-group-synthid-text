@@ -35,6 +35,7 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{caption}
+\usepackage{bbm}
 
 \hypersetup{
   colorlinks=true,
@@ -53,6 +54,7 @@
   \footnotetext{\tiny{#1}}%
   \endgroup
 }
+\newcommand{\ind}{\mathbbm{1}}
 
 % Letters: bold symbols
 \def\bA{\mathbf{A}}
@@ -328,7 +330,7 @@
     \begin{figure}
         \centering
         \includegraphics[width=0.5\textwidth]{figs/motivation_tmlr.png}
-        \caption*{\href{https://medium.com/@TmlrOrg/increasing-emphasis-on-clear-writing-in-acceptance-criteria-bfd75349f5e9}{Link.} TMLR's call for reviewers to emphasise more on clarity of writing.}
+        \caption*{\href{https://medium.com/@TmlrOrg/increasing-emphasis-on-clear-writing-in-acceptance-criteria-bfd75349f5e9}{Link.} TMLR's call for reviewers to emphasise more on clarity of writing due to surges in AI-generated content.}
     \end{figure}
 \end{frame}
 
@@ -385,7 +387,7 @@
 
 % 3. SynthID-Text mechanism -- 12 minutes
 \section{SynthID-Text}
-\begin{frame}[t]{SynthID-Text mechanism}
+\begin{frame}[t]{SynthID-Text overview}
     % Secret key, context hashing, and pseudorandom watermark functions.
     % Layered tournament sampling.
     % Walk through a small example based on Figure 2.
@@ -395,41 +397,120 @@
         \includegraphics[width=0.8\textwidth]{figs/method_overview.png}
     \end{figure}
 
+
+    \begin{itemize}
+        \item Non-distortionary.
+        \item Computationally efficient.
+    \end{itemize}
+
     \sourcenote{Fig.~1, Dathathri et al.}
 \end{frame}
 
+\begin{frame}[t]{Watermarking -- Tournament Sampling}
+    General principle: select a token from the LLM distribution that is likely to score higher under some random watermarking functions.
+
+    \focus{Tournament Sampling}: achieve the above using a tournament-like process.
+
+    \focus{Watermarking function}: $g_l(x_t, r_t)$, where $x_t$ is a candidate token, and $r_t$ is a random seed.
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.6\textwidth]{figs/method_tournament_sampling.png}
+    \end{figure}
+
+    Larger $m$ $\rightarrow$ better detectability, but it does not increase indefinitely. They use $m = 30$.
+\end{frame}
+
+\begin{frame}[t]{Watermarking detection}
+    \begin{align*}
+        \mathrm{Score}(x) = \frac{1}{mT} \sum_{t=1}^T \sum_{l=1}^m g_l(x_t, r_t) \;.
+    \end{align*}
+    
+    Intuition: $\mathrm{Score}(x)$ takes higher values for a watermarked sequence.
+    
+    \begin{itemize}
+        \item Example: $g_l(x, r) = \ind\{u_l(x, r) > 0.5\}$, where $u_l(x, r)$ is a pseudo-random function generating values in $[0, 1]$.
+        \item In practice, 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[t]{A frequentist approach to detection}
+    \xl{talk about hypothesis testing}
+\end{frame}
+
 % 4. Guarantees and detection -- 7 minutes
-\section{Guarantees and detection}
 \begin{frame}[t]{Guarantees and detection}
     % Non-distortion: token, single-sequence, and multiple-sequence levels.
     % Repeated-context masking and a short proof sketch.
     % Watermark score, null hypothesis, thresholds, and abstention.
     % Detection power as a function of text length and entropy.
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{figs/method_non_distort.png}
+    \end{figure}
+    Notation: 
+    \begin{itemize}
+        \item $V = $ set of candidate tokens (vocabulary).
+        \item $\Delta V = \text{probability simplex over $V$} = \{ p: V \rightarrow [0, 1] \mid \sum_{x \in V} p(x) = 1 \}$. 
+        \item $\mathcal{R} = $ set of possible random seeds.
+    \end{itemize}
+
+    \xl{highlight box}
+    In words: A sampling algorithm is non-distortionary if in expectation the distribution on the next token is identical before and after watermarking.
+
+    \focus{Strong non-distortion}: the above is extended for \textbf{sequences} of text.
+
 \end{frame}
 
-% 5. Computational scalability -- 5 minutes
-\section{Computational scalability}
-\begin{frame}[t]{Computational scalability}
-    % Efficient implementation of tournament sampling.
-    % Speculative sampling: draft model and target model.
-    % Speed versus watermark detectability.
-\end{frame}
-
-% 6. Empirical evidence -- 8 minutes
-\section{Empirical evidence}
-\begin{frame}[t]{Empirical evidence}
+\begin{frame}[t]{Empirical evaluation}
     % Detection results and baseline comparisons: Figure 3.
     % Text quality, response diversity, and latency.
     % Gemini live experiment: approximately 20 million responses.
     % Duplicate this frame as needed to separate the evaluations.
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{figs/eval_detectability.png}
+        \caption*{\textbf{Fig.3}Detection performance of SynthID-Text.}
+    \end{figure}
 \end{frame}
 
+
+% 5. Computational scalability -- 5 minutes
+\begin{frame}[t]{Computational complexity}
+    % Efficient implementation of tournament sampling.
+    % Speculative sampling: draft model and target model.
+    % Speed versus watermark detectability.
+    
+    \begin{table}
+        \centering
+        \begin{tabular}{lrr}
+            \hline
+            Sampling method & Latency (ms/token) & Increase (\%) \\
+            \hline
+            Baseline                       & 15.527 & --    \\
+            Tournament sampling ($m=30$ layers) & 15.615 & 0.57 \\
+            Gumbel sampling                & --     & 0.26 \\
+            Soft Red List                  & --     & 0.28 \\
+            \hline
+        \end{tabular}
+        \caption{Gemma 7B-IT latency on 4 v5e TPUs.}
+        \label{tab:watermark-latency}
+    \end{table}
+    
+    SynthID-Text can be integrated into large-scale production systems with ``negligible additional computational overhead''.
+    
+\end{frame}
+
+% 6. Empirical evidence -- 8 minutes
+
 % 7. Critical assessment -- 4 minutes
-\section{Critical assessment}
-\begin{frame}[t]{Critical assessment}
+\begin{frame}[t]{Some thoughts}
     % Short or low-entropy text, editing, and paraphrasing.
     % Provider participation and the scope of watermark detection.
     % Strength of the empirical evidence and main takeaways.
+
 \end{frame}
 
 \end{document}

@@ -1,7 +1,3 @@
 \beamer@sectionintoc {1}{Motivation}{3}{0}{1}
 \beamer@sectionintoc {2}{Background}{7}{0}{2}
 \beamer@sectionintoc {3}{SynthID-Text}{10}{0}{3}
-\beamer@sectionintoc {4}{Guarantees and detection}{12}{0}{4}
-\beamer@sectionintoc {5}{Computational scalability}{14}{0}{5}
-\beamer@sectionintoc {6}{Empirical evidence}{16}{0}{6}
-\beamer@sectionintoc {7}{Critical assessment}{18}{0}{7}
