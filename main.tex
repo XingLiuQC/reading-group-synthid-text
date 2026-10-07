@@ -28,9 +28,10 @@
 % --------------------
 % Packages
 % --------------------
+\usefonttheme{serif}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage{lmodern}
+\usepackage{newtxtext,newtxmath}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs}
@@ -47,6 +48,7 @@
 \newcommand{\xl}[1]{\textcolor{brown}{[XL: #1]}}
 \newcommand{\key}[1]{\textbf{#1}}
 \newcommand{\focus}[1]{\textcolor{orange!80!black}{#1}}
+\newcommand{\gray}[1]{\textcolor{gray}{#1}}
 \renewcommand{\footnoterule}{}
 \newcommand{\sourcenote}[1]{%
   \begingroup
@@ -290,7 +292,7 @@
 
 
 % Edit presenter details and add the scheduled presentation date here.
-\title[Scalable text watermarking]{Scalable watermarking for identifying large language model outputs.}
+\title[Scalable text watermarking]{Scalable watermarking for identifying large language model outputs}
 \subtitle{Dathathri et al., \textit{Nature} (2024)}
 \author{Xing Liu}
 \institute{QuantCo reading group}
@@ -308,7 +310,6 @@
     \tableofcontents[hideallsubsections]
 \end{frame}
 
-% 1. Motivation -- 4 minutes
 \section{Motivation}
 \begin{frame}[t]{Motivation}
     \begin{figure}
@@ -334,13 +335,10 @@
     \end{figure}
 \end{frame}
 
-% 2. Background -- 5 minutes
 \section{Background}
 \begin{frame}[t]{How LLMs Generate Texts}
-    % Autoregressive next-token sampling and entropy.
-    % Intuition behind existing generative watermarking approaches.
     \begin{itemize}
-        \item Most LLMs generated texts using autoregressive next-token sampling.
+        \item Most LLMs generate text using autoregressive next-token sampling.
     \end{itemize}
     \begin{figure}
         \centering
@@ -356,132 +354,170 @@
 \end{frame}
 
 \begin{frame}[t]{Existing Approaches for LLM Text Detection}
-    \begin{itemize}
-        \item Retrieval-based detection
-            \begin{itemize}
-                \item Keeping a growing record of all generated texts and checking against it for matches.
-                \item Requires scale and coordination, and raises privacy concerns.
-            \end{itemize}
-        \item Post hoc detection
-            \begin{itemize}
-                \item Using the statistical features of text or training a ML-based classifier.
-                \item Computationally expensive; inconsistent performance (especially out-of-domain).
-            \end{itemize}
-        \item Watermarking
-            \begin{itemize}
-                \item Marking the generated text in some way so that it can subsequently be identified.
-                \item Three approaches:
-                \begin{itemize}
-                    \item During generation. \hspace{50pt} \focus{$\rightarrow$ This paper}.
-                    \item Editing already generated text.
-                    \item Altering LLM training data.
-                \end{itemize}
-                \item Often involves a quality (of generated texts) and effect (of detection) trade-off.
-            \end{itemize}
-    \end{itemize}
-    \xl{use plots?}
-\end{frame}
-
-% mention this? https://www.pangram.com/ 
-
-
-% 3. SynthID-Text mechanism -- 12 minutes
-\section{SynthID-Text}
-\begin{frame}[t]{SynthID-Text overview}
-    % Secret key, context hashing, and pseudorandom watermark functions.
-    % Layered tournament sampling.
-    % Walk through a small example based on Figure 2.
-    % Duplicate this frame as needed for the algorithm walkthrough.
     \begin{figure}
         \centering
-        \includegraphics[width=0.8\textwidth]{figs/method_overview.png}
+        \includegraphics[width=0.9\textwidth]{figs/bg_summary.png}
     \end{figure}
+\end{frame}
 
+\begin{frame}[t]{Existing Approaches for LLM Text Detection}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.9\textwidth]{figs/bg_summary2.png}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}[t]{Intuition behind watermarking -- Monopoly}
+    \begin{center}
+        \includegraphics[width=0.4\textwidth]{figs/bg_monopoly.png}
+    \end{center}
+
+    \begin{itemize}
+        \item[\raisebox{-0.4\height}{\includegraphics[width=1.2em]{figs/bg_dice.png}}]
+              Method 1: roll a dice
+        \item[\raisebox{-0.4\height}{\includegraphics[width=1.2em]{figs/bg_pi.png}}]
+              Method 2: book of $\pi$ (3.1415926\textcolor{orange}{5358979323846...})
+    \end{itemize}
+
+    \begin{block}{}
+        Both are random, but Method 2 is back-traceable (watermarked).
+    \end{block}
+\end{frame}
+
+\section{SynthID-Text}
+\begin{frame}[t]{}
+    \vfill
+    \begin{itemize}
+        \item \url{https://github.com/google-deepmind/synthid-text}
+        \item \url{https://watermark.keito.me/}
+    \end{itemize}
+    \vfill
+\end{frame}
+
+
+\begin{frame}[t]{SynthID-Text overview}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.7\textwidth]{figs/method_overview.png}
+    \end{figure}
 
     \begin{itemize}
         \item Non-distortionary.
         \item Computationally efficient.
     \end{itemize}
 
+    \vfill
+
     \sourcenote{Fig.~1, Dathathri et al.}
 \end{frame}
 
 \begin{frame}[t]{Watermarking -- Tournament Sampling}
-    General principle: select a token from the LLM distribution that is likely to score higher under some random watermarking functions.
-
-    \focus{Tournament Sampling}: achieve the above using a tournament-like process.
-
-    \focus{Watermarking function}: $g_l(x_t, r_t)$, where $x_t$ is a candidate token, and $r_t$ is a random seed.
+    \focus{Tournament Sampling}: use a tournament-like process to select a token from the LLM distribution that is likely to score higher under some random watermarking functions.
 
     \begin{figure}
         \centering
         \includegraphics[width=0.6\textwidth]{figs/method_tournament_sampling.png}
     \end{figure}
 
-    Larger $m$ $\rightarrow$ better detectability, but it does not increase indefinitely. They use $m = 30$.
+    \focus{Watermarking function}: $g_l(x_t, r_t)$, where $x_t$ is a candidate token, and $r_t$ is a random seed.
+
+    \begin{itemize}
+        \item Number of layers $m$. Larger $m$ $\rightarrow$ better detectability. They use $m = 30$.
+        \item Number of candidates $N$. Larger $N$ $\rightarrow$ better detectability. They use $N = 2$.
+    \end{itemize}
 \end{frame}
 
-\begin{frame}[t]{Watermarking detection}
+\begin{frame}[t]{Watermarking function}
+    \vfill
+    \begin{example}[binary watermarking function]
+        $g_l(x, r) = \ind\{u_l(x, r) > 0.5\}$, where 
+        \begin{align*}
+            u_l(x, r) = \frac{h(x, r, l)}{2^{n_{\text{sec}}}} \;\in\; [0, 1) \;,
+        \end{align*}
+        $h$ is a pseudorandom function producing uniform-looking integers, and $n_{\text{sec}}$ is the security parameter.
+    \end{example}
+    \vfill
+    
+\end{frame}
+
+\begin{frame}[t]{Watermarking detection \gray{(Appendix A)}}
     \begin{align*}
         \mathrm{Score}(x) = \frac{1}{mT} \sum_{t=1}^T \sum_{l=1}^m g_l(x_t, r_t) \;.
     \end{align*}
     
-    Intuition: $\mathrm{Score}(x)$ takes higher values for a watermarked sequence.
-    
+    \begin{block}{}
+        Intuition: $\mathrm{Score}(x)$ takes higher values for a watermarked sequence.
+    \end{block}
+
+    Context index $t$ is only summed over a subset $\hat{T} \subseteq \{1, \ldots, T\}$ that
     \begin{itemize}
-        \item Example: $g_l(x, r) = \ind\{u_l(x, r) > 0.5\}$, where $u_l(x, r)$ is a pseudo-random function generating values in $[0, 1]$.
-        \item In practice, 
+        \item excludes the first $t = 1, \ldots, H$ tokens, where the context window is incomplete.
+        \item excludes $t$ where the context $x_{t-H}, \ldots, x_{t-1}$ has appeared previously in the sequence.
     \end{itemize}
+
+    \begin{example}[$H = 3$]
+        {\footnotesize
+        "$\underbrace{\textcolor{red}{\text{Explain in one}}}_{\text{\scriptsize incomplete}}$ short paragraph how to come up with nice banters \underline{for machine learning} talks tailored $\underbrace{\textcolor{orange}{\text{for machine learning}}}_{\text{\scriptsize repeated}}$ experts."
+        }
+    \end{example}
+
 \end{frame}
 
-\begin{frame}[t]{A frequentist approach to detection}
-    \xl{talk about hypothesis testing}
+\begin{frame}[t]{Watermarking detection \gray{(Appendix A)}}
+    \vfill
+    \begin{block}{Hypothesis testing for watermarking}
+        Under 
+        \begin{align*}
+            H_0: \text{the text is not watermarked by SynthID-Text} \;,
+        \end{align*}
+        each $g_l(x_t, r_t)$ is i.i.d., and the $p$-value of $\mathrm{Score}(x)$ has an explicit form.
+    \end{block}
+    \vfill
 \end{frame}
 
-% 4. Guarantees and detection -- 7 minutes
-\begin{frame}[t]{Guarantees and detection}
-    % Non-distortion: token, single-sequence, and multiple-sequence levels.
-    % Repeated-context masking and a short proof sketch.
-    % Watermark score, null hypothesis, thresholds, and abstention.
-    % Detection power as a function of text length and entropy.
+\begin{frame}[t]{Quality preservation \gray{(Appendix G)}}
 
+    \begin{block}{In words}
+        A sampling algorithm is non-distortionary if in expectation the distribution on the next token is identical before and after watermarking.
+    \end{block}
+    
     \begin{figure}
         \centering
-        \includegraphics[width=0.8\textwidth]{figs/method_non_distort.png}
+        \includegraphics[width=0.9\textwidth]{figs/method_non_distort.png}
     \end{figure}
-    Notation: 
+    {\footnotesize
     \begin{itemize}
-        \item $V = $ set of candidate tokens (vocabulary).
+        \item $V = $ set of candidate tokens.
         \item $\Delta V = \text{probability simplex over $V$} = \{ p: V \rightarrow [0, 1] \mid \sum_{x \in V} p(x) = 1 \}$. 
         \item $\mathcal{R} = $ set of possible random seeds.
     \end{itemize}
-
-    \xl{highlight box}
-    In words: A sampling algorithm is non-distortionary if in expectation the distribution on the next token is identical before and after watermarking.
-
-    \focus{Strong non-distortion}: the above is extended for \textbf{sequences} of text.
+    }
 
 \end{frame}
 
-\begin{frame}[t]{Empirical evaluation}
-    % Detection results and baseline comparisons: Figure 3.
-    % Text quality, response diversity, and latency.
-    % Gemini live experiment: approximately 20 million responses.
-    % Duplicate this frame as needed to separate the evaluations.
+\begin{frame}[t]{Qualifty preservation \gray{(Appendix G)}}
 
-    \begin{figure}
-        \centering
-        \includegraphics[width=0.8\textwidth]{figs/eval_detectability.png}
-        \caption*{\textbf{Fig.3}Detection performance of SynthID-Text.}
-    \end{figure}
+    \vfill
+
+    \focus{$K$-sequence non-distortion}: a stronger version of single-token non-distortion that holds for \textbf{sequences} of tokens.
+
+    \begin{block}{\bf{Theorem 21}}
+        For any $K \geq 1$, SynthID-Text \gray{(with $N=2$ and $K$-sequence repeated context masking)} is $K$-sequence non-distortionary.
+    \end{block}
+
+    \vspace{2em}
+    \begin{example}[$K$-sequence repeated context masking, $K=2$]
+        "Explain in one short paragraph how to come up with nice banters \underline{for machine learning} talks tailored \textcolor{orange}{for machine learning} experts."
+
+        "Give me a concrete example of a joke \textcolor{orange}{for machine learning} that I can use to start my talk."
+
+    \end{example}
+    \vfill
 \end{frame}
 
 
-% 5. Computational scalability -- 5 minutes
 \begin{frame}[t]{Computational complexity}
-    % Efficient implementation of tournament sampling.
-    % Speculative sampling: draft model and target model.
-    % Speed versus watermark detectability.
     
     \begin{table}
         \centering
@@ -499,18 +535,52 @@
         \label{tab:watermark-latency}
     \end{table}
     
-    SynthID-Text can be integrated into large-scale production systems with ``negligible additional computational overhead''.
-    
+    \begin{block}{}
+        SynthID-Text can be integrated into large-scale production systems with ``negligible additional computational overhead''.
+    \end{block}
+
 \end{frame}
 
-% 6. Empirical evidence -- 8 minutes
+\section{Empirical evaluation}
+\begin{frame}[t]{Empirical evaluation -- scalability to number of tokens}
 
-% 7. Critical assessment -- 4 minutes
-\begin{frame}[t]{Some thoughts}
-    % Short or low-entropy text, editing, and paraphrasing.
-    % Provider participation and the scope of watermark detection.
-    % Strength of the empirical evidence and main takeaways.
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{figs/eval_detectability.png}
+        \caption*{\textbf{Fig.3:} Detection performance of SynthID-Text, using prompts from the ELI5 dataset.}
+    \end{figure}
+\end{frame}
 
+\begin{frame}[t]{Empirical evaluation -- scalability to $m$}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{figs/eval_effect_of_m.png}
+        \caption*{\textbf{Fig.C1:} Detectability with respect to number of tournament layers $m$.}
+    \end{figure}
+\end{frame}
+
+\begin{frame}[t]{Empirical evaluation -- robustness under perturbation}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{figs/eval_robustness.png}
+        \caption*{\textbf{Fig.C3:} Detectability under various perturbations.}
+    \end{figure}
+\end{frame}
+
+\section{Discussion}
+\begin{frame}[t]{Some remarks}
+    \vfill
+    \begin{itemize}
+        \item \focus{Diversity}: Same diversity within a single text, but reduced diversity for the same prompt.
+        \item \focus{Limitation}: Requires full knowledge of the watermarking scheme for the detection to work --- 
+            \begin{itemize}
+                \item NOT a generic LLM-content detector.
+                \item Alternatives exist: \url{pangram.com}
+            \end{itemize}
+        \item \focus{Adversarial attacks}: Even a simple translation trick can be effective.
+        \item \focus{Evaluation}: Various evaluation principles presented (frequentist, Bayesian, with/without perturbation). What is EU's rule?
+    \end{itemize}
+    \vfill
 \end{frame}
 
 \end{document}
